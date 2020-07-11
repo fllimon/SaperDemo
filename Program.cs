@@ -25,21 +25,50 @@ namespace SapperGameProject
 
             viewMenu.PrintGameMenu();
 
-            do
-            {
-                someAction = viewer.GetActionKey(Console.ReadKey().Key);
-            } while (someAction == 0);
+            someAction = GetPressKey(viewer);
 
             if (ActionKey.PressEnter.HasFlag(someAction))
             {
                 Console.Clear();
                 manager.Run();
-                viewer.PrintImage();
-                viewer.SetHideField();
-
-                Console.SetCursorPosition(1, 1);
+                viewer.Show();
+                Console.SetCursorPosition(DefaultSettings.DEFAULT_CURSOR_POSITION_LEFT,
+                                          DefaultSettings.DEFAULT_CURSOR_POSITION_TOP);
             }
+
+            do
+            {
+                someAction = GetPressKey(viewer);
+
+                if (someAction == ActionKey.PressExit)
+                {
+                    break;
+                }
+
+                if (someAction == ActionKey.PressEnter)
+                {
+                    if ((new Coordinate(Console.CursorLeft, Console.CursorTop) == bomb.Position))
+                    {
+                        exitGame = true;
+
+                        break;
+                    }
+                }
+
+            } while ((someAction != ActionKey.PressExit) || (!exitGame));
+
             Console.ReadKey();
+        }
+
+        private static ActionKey GetPressKey(SaperViewer viewer)
+        {
+            ActionKey someAction;
+            do
+            {
+                someAction = viewer.GetActionKey(Console.ReadKey(true).Key);
+            } while (someAction == 0);
+
+            return someAction;
         }
     }
 }

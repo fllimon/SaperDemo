@@ -12,6 +12,8 @@ namespace SapperGameProject
 
         int NumRows { get; }
 
-        char this[int firstIndex, int secondIndex] { get; }
+        Cell this[int firstIndex, int secondIndex] { get; set; }
+
+        char this[Coordinate someCoordinate] { get; }
     }
 }

@@ -40,7 +40,7 @@ namespace SapperGameProject
         {
             for (int i = 0; i < _owner.MaxBomb; i++)
             {
-                Coordinate someCoordinate = _owner.GetCoordinateEmptyCell();
+                Coordinate someCoordinate = _owner.GetCoordinateEmptyCell();    //ToDo: ??
 
                 _owner.Add(new Bomb(_owner, someCoordinate));
 

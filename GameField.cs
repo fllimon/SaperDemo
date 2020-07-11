@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace SapperGameProject
@@ -13,43 +15,29 @@ namespace SapperGameProject
         private int _maxCheckCell = -1;
         private int _numRows = -1;
         private int _numCols = -1;
-        private readonly Cell[,] _cells;
-        private readonly Dictionary<Coordinate, Cell> _gamefield;
+        //private readonly Cell[,] _cells;
+        private Dictionary<Coordinate, Cell> _gamefield;
         
         #endregion
 
         #region =====---- CTOR -----=====
 
-        public GameField(int numRows = DefaultSettings.DEFAULT_MAX_ROWS,
-                         int numCols = DefaultSettings.DEFAULT_MAX_COLS)
+        public GameField()
         {
-            _numRows = numRows;
-            _numCols = numCols;
             _maxCheckCell = DefaultSettings.DEFAULT_MAX_CHECKCELL;
             _maxBomb = DefaultSettings.DEFAULT_MAX_BOMB;
-            _cells = new Cell[numRows, numCols];
-            _gamefield = new Dictionary<Coordinate, Cell>(DefaultSettings.DEFAULT_MAX_ROWS * DefaultSettings.DEFAULT_MAX_COLS);
+            //_cells = new Cell[numRows, numCols];
+            _gamefield = new Dictionary<Coordinate, Cell>(DefaultSettings.DEFAULT_SIZE_GAME_FIELD * 
+                                                          DefaultSettings.DEFAULT_SIZE_GAME_FIELD);
         }
 
         #endregion
 
         #region =====----- PROPERTIES -----=====
 
-        public int NumRows
-        {
-            get
-            {
-                return _numRows;
-            }
-        }
+        public int NumRows { get; set; } = DefaultSettings.DEFAULT_MAX_ROWS;
 
-        public int NumCols
-        {
-            get
-            {
-                return _numCols;
-            }
-        }
+        public int NumCols { get; set; } = DefaultSettings.DEFAULT_MAX_COLS;
 
         public int MaxBomb
         {
@@ -69,19 +57,36 @@ namespace SapperGameProject
 
         #endregion
 
-        public char this[int firstIndex, int secondIndex]
+        //public char this[int firstIndex, int secondIndex]
+        //{
+        //    get
+        //    {
+        //        char img = (char)DefaultImage.NoImage;
+        //        if (_cells[firstIndex, secondIndex] != null)
+        //        {
+        //            img = _cells[firstIndex, secondIndex].Image;
+        //        }
+
+        //        return img;
+
+        //        //return this[new Coordinate(firstIndex, secondIndex)];
+        //    }
+        //}
+
+        public Cell this[int x, int y]     // ToDo : Вопрос?
         {
             get
             {
-                char img = (char)DefaultImage.NoImage;
-                if (_cells[firstIndex, secondIndex] != null)
-                {
-                    img = _cells[firstIndex, secondIndex].Image;
-                }
+                Coordinate position = new Coordinate(x, y);
 
-                return img;
+                return _gamefield[position];
+            }
 
-                //return this[new Coordinate(firstIndex, secondIndex)];
+            set
+            {
+                Coordinate position = new Coordinate(x, y);
+
+                _gamefield[position] = value;
             }
         }
 
@@ -114,14 +119,24 @@ namespace SapperGameProject
             }
         }
 
+        //private bool IsEmptyCell(Coordinate coordinate)
+        //{
+        //    return (_cells[coordinate.X, coordinate.Y] == null);
+        //}
+
         private bool IsEmptyCell(Coordinate coordinate)
         {
-            return (_cells[coordinate.X, coordinate.Y] == null);
+            return (_gamefield.ContainsKey(coordinate));
         }
+
+        //public void Add(Cell someEntity)
+        //{
+        //    _gamefield[someEntity.Position.X, someEntity.Position.Y] = someEntity;
+        //}
 
         public void Add(Cell someEntity)
         {
-            _cells[someEntity.Position.X, someEntity.Position.Y] = someEntity;
+            _gamefield[someEntity.Position] = someEntity;    //ToDo: Вопрос?
         }
 
         public Coordinate GetCoordinateEmptyCell()
@@ -132,7 +147,7 @@ namespace SapperGameProject
             do
             {
                 someCoordinate = rand.GetRandomCoordinate(NumRows, NumCols);
-            } while (!IsEmptyCell(someCoordinate));
+            } while (IsEmptyCell(someCoordinate));
 
             return someCoordinate;
         }

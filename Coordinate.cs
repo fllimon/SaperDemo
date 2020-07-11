@@ -72,7 +72,17 @@ namespace SapperGameProject
 
         public override int GetHashCode()
         {
-            return X ^ Y;
+            return GetShift(X.GetHashCode(), 2) ^ Y.GetHashCode();
+        }
+
+        private int GetShift(int value, int positions)
+        {
+            positions = positions & 0x1F;
+
+            uint number = BitConverter.ToUInt32(BitConverter.GetBytes(value), 0);
+            uint warpped = number >> (32 - positions);
+
+            return BitConverter.ToInt32(BitConverter.GetBytes((number << positions) | warpped), 0);
         }
     }
 }
