@@ -16,10 +16,8 @@ namespace SapperGameProject
 
             ActionKey someAction = ActionKey.NoAction;
 
-            Coordinate coordinate = new Coordinate(0, 0);
             GameField gameField = new GameField();
             GameManager manager = new GameManager(gameField);
-            Bomb bomb = new Bomb(gameField, coordinate);
             SaperViewer viewer = new SaperViewer(gameField);
             UI viewMenu = new UI();
 
@@ -47,7 +45,9 @@ namespace SapperGameProject
 
                 if (someAction == ActionKey.PressEnter)
                 {
-                    if ((new Coordinate(Console.CursorLeft, Console.CursorTop) == bomb.Position))
+                    bool result = gameField.IsChekBomb(new Coordinate(Console.CursorLeft, Console.CursorTop));
+
+                    if (result)
                     {
                         exitGame = true;
 
@@ -56,8 +56,6 @@ namespace SapperGameProject
                 }
 
             } while ((someAction != ActionKey.PressExit) || (!exitGame));
-
-            Console.ReadKey();
         }
 
         private static ActionKey GetPressKey(SaperViewer viewer)

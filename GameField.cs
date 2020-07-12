@@ -13,9 +13,6 @@ namespace SapperGameProject
 
         private int _maxBomb = -1;
         private int _maxCheckCell = -1;
-        private int _numRows = -1;
-        private int _numCols = -1;
-        //private readonly Cell[,] _cells;
         private Dictionary<Coordinate, Cell> _gamefield;
         
         #endregion
@@ -26,7 +23,6 @@ namespace SapperGameProject
         {
             _maxCheckCell = DefaultSettings.DEFAULT_MAX_CHECKCELL;
             _maxBomb = DefaultSettings.DEFAULT_MAX_BOMB;
-            //_cells = new Cell[numRows, numCols];
             _gamefield = new Dictionary<Coordinate, Cell>(DefaultSettings.DEFAULT_SIZE_GAME_FIELD * 
                                                           DefaultSettings.DEFAULT_SIZE_GAME_FIELD);
         }
@@ -57,22 +53,6 @@ namespace SapperGameProject
 
         #endregion
 
-        //public char this[int firstIndex, int secondIndex]
-        //{
-        //    get
-        //    {
-        //        char img = (char)DefaultImage.NoImage;
-        //        if (_cells[firstIndex, secondIndex] != null)
-        //        {
-        //            img = _cells[firstIndex, secondIndex].Image;
-        //        }
-
-        //        return img;
-
-        //        //return this[new Coordinate(firstIndex, secondIndex)];
-        //    }
-        //}
-
         public Cell this[int x, int y]     // ToDo : Вопрос?
         {
             get
@@ -94,27 +74,27 @@ namespace SapperGameProject
         {
             get
             {
-                //                _gamefield[c]
+                ////                _gamefield[c]
 
-                Cell result = null;
+                //Cell result = null;
 
-                char img = (char)DefaultImage.NoImage;
+                //char img = (char)DefaultImage.NoImage;
 
-                if (_gamefield.TryGetValue(c, out result))
+                //if (_gamefield.TryGetValue(c, out result))
+                //{
+                //    img = result.Image;
+                //}
+
+                //return img;
+
+                try
                 {
-                    img = result.Image;
+                    return _gamefield[c].Image;
                 }
-                
-                return img;
-
-                //try
-                //{
-                //    return _gamefield[c].Image;
-                //}
-                //catch (KeyNotFoundException)
-                //{
-                //    return (char)DefaultImage.NoImage;
-                //}
+                catch (KeyNotFoundException)
+                {
+                    return (char)DefaultImage.NoImage;
+                }
 
             }
         }
@@ -128,6 +108,11 @@ namespace SapperGameProject
         {
             return (_gamefield.ContainsKey(coordinate));
         }
+
+        public bool IsChekBomb(Coordinate c)
+        {
+            return _gamefield[c] is Bomb;
+        } 
 
         //public void Add(Cell someEntity)
         //{
